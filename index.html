@@ -281,6 +281,7 @@ function decodeQR(imageData){
   headers: {
       'Content-Type': 'application/json'
   },  
+  console.log(JSON.stringify(imageData))						       
   body: JSON.stringify(imageData)
   }).then(function(response) {
   	return response.json();
