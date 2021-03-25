@@ -302,8 +302,7 @@ function startTimer() {
 	var video = document.querySelector('video')
 	var imageData = new ImageDataEntity(takeSnapshot(video));
 	//console.log(JSON.stringify(imageData))
-			    console.log(JSON.stringify(imageData))
-	//decodeQR(imageData);
+	decodeQR(imageData);
 	}, 1000); 
 } 
 
