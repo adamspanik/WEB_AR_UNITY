@@ -106,6 +106,18 @@ function drawDestinations(){
     }
   }   
 }
+
+function createSignXXX(){
+  var sign = createSignEntity(0); 
+  var label = createImageEntity("#label", new THREE.Vector3(1.52, 1.08, 0.01), new THREE.Vector3(0, 0, 0), "2");
+  var text_q = createTextEntity("xxx", "#343A3E", 5, new THREE.Vector3(0.2, 0.2, 0));
+  
+  sign.appendChild(label);
+  sign.appendChild(text_q);
+     
+  wrapper.appendChild(sign);
+}						
+						
 	  
 function createSign(angle){
   var sign = createSignEntity(angle); 
@@ -257,22 +269,24 @@ function createTextEntity(textValue, textColor, size, position){
 
 																																																																								 
 class ImageDataEntity {
-  constructor(qData) {
-     this.qData = qData;  
+  constructor(qdata) {
+     this.qdata = qdata;  
   }
 }																		 
 
 																																																																								 
-function callMyLocal(imageData){
-  fetch("https://192.168.0.103:8443/qr2", {
+function decodeQR(imageData){
+  fetch("https://api01-b.hekate.club/devTools/decodeQR", {
   method: 'POST', // or 'PUT'
   headers: {
       'Content-Type': 'application/json'
   },  
   body: JSON.stringify(imageData)
   }).then(function(response) {
+						       console.log("response.json() " + response.json())
   	return response.json();
   }).then(function(data) { 
+										     console.log("data" + data)
   	 return data;
   }).catch(function(err) {
   	console.log("Error " + err);
@@ -282,16 +296,14 @@ function callMyLocal(imageData){
 var timer; 																
           
 function startTimer() { 
-			    var xxx = new ImageDataEntity('xxx')
-			    console.log(JSON.stringify(xxx));
 	timer = setInterval(function() {     
-  // var imageData = new ImageDataEntity(takeSnapshot())
+   	//var imageData = new ImageDataEntity(takeSnapshot())
 	//console.log(imageData);
 	//callMyLocal(imageData);
 	var video = document.querySelector('video')
 	var imageData = new ImageDataEntity(takeSnapshot(video));
-	console.log(JSON.stringify(imageData))
-	callMyLocal(imageData);
+	//console.log(JSON.stringify(imageData))
+	decodeQR(imageData);
 	}, 1000); 
 } 
 
