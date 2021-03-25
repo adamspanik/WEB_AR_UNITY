@@ -13,6 +13,9 @@
 
 <!-- BEGIN: Middle HTML -->
 <body style='margin : 0px; overflow: hidden; font-family: Monospace;'>
+<div style="text-align:center">
+<p id="detectedqr">DETECTING QR: </p>
+</div>	
 <!-- <a-scene embedded arjs='debugUIEnabled: false; sourceType: video; sourceUrl:../../data/videos/headtracking.mp4;'>
 arjs='trackingMethod: best; patternRatio: 0.9; debugUIEnabled: false; maxDetectionRate:30;' antialias="true"
 -->
@@ -287,7 +290,7 @@ function decodeQR(imageData){
   }).then(function(response) {
   	return response.json();
   }).then(function(data) { 
-	 console.log(data)
+	 document.querySelector("#detectedqr").innerHTML = "data";
   	 return data;
   }).catch(function(err) {
   	console.log("Error " + err);
