@@ -290,7 +290,10 @@ function decodeQR(imageData){
   }).then(function(response) {
   	return response.json();
   }).then(function(data) { 
-	 document.querySelector("#detectedqr").innerHTML = data.qdata;
+		if(data.qdata != null)
+		{
+			document.querySelector("#detectedqr").innerHTML = data.qdata;
+		}
   	 return data;
   }).catch(function(err) {
   	console.log("Error " + err);
