@@ -283,10 +283,9 @@ function decodeQR(imageData){
   },  
   body: JSON.stringify(imageData)
   }).then(function(response) {
-						       console.log("response.json() " + response.json())
   	return response.json();
   }).then(function(data) { 
-										     console.log("data" + data)
+	 console.log("data" + data)
   	 return data;
   }).catch(function(err) {
   	console.log("Error " + err);
