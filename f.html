@@ -2,29 +2,35 @@
 <html>
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<title>Navigation AR.js</title>	
+<title>NNF AFRAME</title>	
 <!-- include aframe -->
 <script src="https://aframe.io/releases/1.2.0/aframe.js"></script>
 <!-- include ar.js -->
 <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+<script src="https://unpkg.com/aframe-render-order-component@1.0.0/dist/aframe-render-order-component.min.js"></script>
 <body style='margin : 0px; overflow: hidden; font-family: Monospace;'>
-<a-scene embedded arjs=’sourceType: webcam; trackingMethod:best;’ vr-mode-ui='enabled: false'>
-<a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .intersectable; useWorldCoordinates: true;"></a-entity>
-<a-assets>
-	<img id="blue_arrow" src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/images/Modra.png"></img>
-	<img id="white_arrow" src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/images/Bila.png"></img>
-	<img id="label" src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/images/label.png"></img>
-	<img id="label_stack2" src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/images/label_stack2.png"></img>
-	<img id="label_stack3" src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/images/label_stack3.png"></img>
-	<img id="door_icon" src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/images/door_icon.png"></img>
-	<img id="exit_icon" src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/images/exit_icon.png"></img>
-</a-assets>
-<a-marker id="arrow_marker" type='pattern' url='https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/markers/arrow_marker.patt' emitevents="true" smooth="true smoothCount="10" smoothTolerance="0.01" smoothThreshold="5"> 
-  <a-entity lookathandler id="lookathandler" position="0 0 0" rotation="-90 0 0"></a-entity>
-  <a-entity wrapper id="wrapper" position="0 0 0" emitevents="true">                                                                              
-</a-marker>								   
-<a-entity camera></a-entity>
-</a-scene>
+	<div style="text-align:center; font-size:12px; color:white;">
+		<p id="detectedqr">DETECTING QR: </p>
+	</div>	
+
+	<a-scene device-orientation-permission-ui="enabled: false" [renderer]="logarithmicDepthBuffer: true;" embedded arjs=’sourceType: webcam; trackingMethod:best;’ vr-mode-ui='enabled: false'>
+	<canvas visibility="hidden"></canvas>	
+	<a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .intersectable; useWorldCoordinates: true;"></a-entity>
+	<a-assets>
+		<img id="blue_arrow" src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/images/Modra.png"></img>
+		<img id="white_arrow" src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/images/Bila.png"></img>
+		<img id="label" src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/images/label.png"></img>
+		<img id="label_stack2" src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/images/label_stack2.png"></img>
+		<img id="label_stack3" src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/images/label_stack3.png"></img>
+		<img id="door_icon" src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/images/door_icon.png"></img>
+		<img id="exit_icon" src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/images/exit_icon.png"></img>
+	</a-assets>
+	<a-marker id="arrow_marker" type='pattern' url='https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/markers/arrow_marker.patt' emitevents="true" smooth="true smoothCount="10" smoothTolerance="0.01" smoothThreshold="5"> 
+		<a-entity lookathandler id="lookathandler" position="0 0 0" rotation="-90 0 0"></a-entity>
+		<a-entity wrapper id="wrapper" position="0 0 0" emitevents="true">                                                                              
+	</a-marker>								   
+	<a-entity camera></a-entity>
+	</a-scene>
 								   
 <script> 
 var listOfArrows = [];
@@ -45,13 +51,11 @@ window.onload = () => {
 };    
 							  
 AFRAME.registerComponent('lookathandler', {
-tick: function () {
+tick: function () {																													
 	var camPosition = camera.object3D.position;	
-	lookathandler.object3D.lookAt(new THREE.Vector3(camPosition.x, camPosition.y, camPosition.z));
 	for (var i = 0; i < listOfSigns.length; i++) 
 	{
-		listOfSigns[i].object3D.rotation.z = lookathandler.object3D.rotation.z
-		listOfSigns[i].object3D.rotation.y = lookathandler.object3D.rotation.y
+		listOfSigns[i].object3D.lookAt(camPosition.x, 0, camPosition.z)
 	}
 }
 });							  
@@ -109,10 +113,10 @@ var otherDestinations = getOtherDestinations(originDestination);
 	  
 function createSign(destination){
   var sign = createSignEntity(destination.angle); 
-  var label = createImageEntity("#label", new THREE.Vector3(1.52, 1.08, 0.01), new THREE.Vector3(0, 0, -0.6));
-  var dest_icon = createImageEntity("#exit_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, 0.19, -0.3));
-  var text_q = createTextEntity(destination.name, qTextColor, 5, new THREE.Vector3(0.2, 0.2, -0.3));
-  var text_m = createTextEntity(parseInt(destination.distance) + " m", mTextColor, 4, new THREE.Vector3(0.2, -0.2, -0.3));
+  var label = createImageEntity("#label", new THREE.Vector3(1.52, 1.08, 0.01), new THREE.Vector3(0, 0, 0), "2");
+  var dest_icon = createImageEntity("#exit_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, 0.19, 0), "3");
+  var text_q = createTextEntity(destination.name, qTextColor, 5, new THREE.Vector3(0.2, 0.2, 0));
+  var text_m = createTextEntity(parseInt(destination.distance) + " m", mTextColor, 4, new THREE.Vector3(0.2, -0.2, 0));
   
   sign.appendChild(label);
   sign.appendChild(dest_icon);
@@ -125,15 +129,15 @@ function createSign(destination){
 function createSignStack2(destinations){
   var sign = createSignEntity(destinations[0].angle); 
   
-  var label = createImageEntity("#label_stack2", new THREE.Vector3(1.52, 1.762, 0.01), new THREE.Vector3(0, 0, -0.6));
+  var label = createImageEntity("#label_stack2", new THREE.Vector3(1.52, 1.762, 0.01), new THREE.Vector3(0, 0, 0), "2");
   
-  var dest_icon = createImageEntity("#exit_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, 0.59, -0.3));
+  var dest_icon = createImageEntity("#exit_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, 0.59, 0), "3");
   var text_q = createTextEntity(destinations[0].name, qTextColor, 5, new THREE.Vector3(0.2, 0.6, -0.3));
-  var text_m = createTextEntity(parseInt(destinations[0].distance) + " m", mTextColor, 4, new THREE.Vector3(0.2, 0.25, -0.3));
+  var text_m = createTextEntity(parseInt(destinations[0].distance) + " m", mTextColor, 4, new THREE.Vector3(0.2, 0.25, 0));
   
-  var dest_icon2 = createImageEntity("#exit_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, -0.26, -0.3));
-  var text_q2 = createTextEntity(destinations[1].name, qTextColor, 5, new THREE.Vector3(0.2, -0.25, -0.3));
-  var text_m2 = createTextEntity(parseInt(destinations[1].distance) + " m", mTextColor, 4, new THREE.Vector3(0.2, -0.6, -0.3));
+  var dest_icon2 = createImageEntity("#exit_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, -0.26, 0), "3");
+  var text_q2 = createTextEntity(destinations[1].name, qTextColor, 5, new THREE.Vector3(0.2, -0.25, 0));
+  var text_m2 = createTextEntity(parseInt(destinations[1].distance) + " m", mTextColor, 4, new THREE.Vector3(0.2, -0.6, 0));
   
   sign.appendChild(label);
   sign.appendChild(dest_icon);
@@ -148,20 +152,20 @@ function createSignStack2(destinations){
   
 function createSignStack3(destinations){
   var sign = createSignEntity(destinations[0].angle);  
-  var label = createImageEntity("#label_stack3", new THREE.Vector3(1.52, 2.736, 0.01), new THREE.Vector3(0, 0, -0.6));
+  var label = createImageEntity("#label_stack3", new THREE.Vector3(1.52, 2.736, 0.01), new THREE.Vector3(0, 0, 0), "2");
   
-  var dest_icon = createImageEntity("#exit_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, 0.99, -0.3));
+  var dest_icon = createImageEntity("#exit_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, 0.99, 0), "3");
   var text_q = createTextEntity(destinations[0].name, qTextColor, 5, new THREE.Vector3(0.2, 1, -0.3)); 
-  var text_m = createTextEntity(parseInt(destinations[0].distance) + " m", mTextColor, 4, new THREE.Vector3(0.2, 0.65, -0.3));
+  var text_m = createTextEntity(parseInt(destinations[0].distance) + " m", mTextColor, 4, new THREE.Vector3(0.2, 0.65, 0));
   
-  var dest_icon2 = createImageEntity("#exit_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, 0.14, -0.3));
-  var text_q2 = createTextEntity(destinations[1].name, qTextColor, 5, new THREE.Vector3(0.2, 0.15, -0.3));
-  var text_m2 = createTextEntity(parseInt(destinations[1].distance) + " m", mTextColor, 4, new THREE.Vector3(0.2, -0.2, -0.3));
+  var dest_icon2 = createImageEntity("#exit_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, 0.14, 0), "3");
+  var text_q2 = createTextEntity(destinations[1].name, qTextColor, 5, new THREE.Vector3(0.2, 0.15, 0));
+  var text_m2 = createTextEntity(parseInt(destinations[1].distance) + " m", mTextColor, 4, new THREE.Vector3(0.2, -0.2, 0));
   
-  var dest_icon3 = createImageEntity("#exit_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, -0.66, -0.3));
-  var text_q3 = createTextEntity(destinations[2].name, qTextColor, 5, new THREE.Vector3(0.2, -0.65, -0.3));
-  var text_m3 = createTextEntity(parseInt(destinations[2].distance) + " m", mTextColor, 4, new THREE.Vector3(0.2, -1, -0.3));
-  
+  var dest_icon3 = createImageEntity("#exit_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, -0.66, 0), "3");
+  var text_q3 = createTextEntity(destinations[2].name, qTextColor, 5, new THREE.Vector3(0.2, -0.65, 0));
+  var text_m3 = createTextEntity(parseInt(destinations[2].distance) + " m", mTextColor, 4, new THREE.Vector3(0.2, -1, 0));
+																																																																							
   sign.appendChild(label);
   sign.appendChild(dest_icon);
   sign.appendChild(text_q);
@@ -189,13 +193,13 @@ function msToTime(ms){
   
 function createSignDestination(destination){
   var sign = createSignEntity(destination.angle);
-  
-  var label = createImageEntity("#label", new THREE.Vector3(2.128, 1.512, 0.01), new THREE.Vector3(0, 0, 0.3));
-  var dest_icon = createImageEntity("#door_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, -0.06, 0.6));
-  var text_d = createTextEntity("MŮJ CÍL", mTextColor, 6, new THREE.Vector3(0, 0.35, 0.6));  
-  var text_m = createTextEntity(parseInt(destination.distance) + " m", mTextColor, 4, new THREE.Vector3(0.5, -0.4, 0.6));
-  var text_q = createTextEntity(destination.name, qTextColor, 5, new THREE.Vector3(0.2, -0.05, 0.6));
-  var text_t = createTextEntity(msToTime(destination.time), mTextColor, 4, new THREE.Vector3(-0.5, -0.4, 0.6));
+  																																		 
+	var label = createImageEntity("#label", new THREE.Vector3(2.128, 1.512, 0.01), new THREE.Vector3(0, 0, 0), "2");
+  var dest_icon = createImageEntity("#door_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, -0.06, 0), "3");
+  var text_d = createTextEntity("MŮJ CÍL", mTextColor, 6, new THREE.Vector3(0, 0.35, 0));  
+  var text_m = createTextEntity(parseInt(destination.distance) + " m", mTextColor, 4, new THREE.Vector3(0.5, -0.4, 0));
+  var text_q = createTextEntity(destination.name, qTextColor, 5, new THREE.Vector3(0.2, -0.05, 0));
+  var text_t = createTextEntity(msToTime(destination.time), mTextColor, 4, new THREE.Vector3(-0.5, -0.4, 0));																																	 
   
   sign.appendChild(label);
   sign.appendChild(text_d);
@@ -207,17 +211,21 @@ function createSignDestination(destination){
   return sign;
 }  
 
-function createImageEntity(imageSrc, scale, position){
+function createImageEntity(imageSrc, scale, position, renderOrder){
   imageId = imageSrc + arrowId + 1;
   var imageEntity = document.createElement('a-image');  
+						  
   imageEntity.setAttribute('id', imageId);
   imageEntity.setAttribute('src', imageSrc);
   imageEntity.setAttribute('scale', scale);
   imageEntity.setAttribute('position', position);
+  imageEntity.setAttribute('material', "depthTest: false; transparent: true");	
+  imageEntity.setAttribute('render-order', renderOrder)							 
+
   
   return imageEntity;
-}
-
+}																																		 
+																																		 
 function createSignEntity(angle){
   var signEntity = document.createElement('a-entity');
   signEntity.setAttribute('id', "sign" + arrowId);
@@ -226,7 +234,7 @@ function createSignEntity(angle){
   
   return signEntity;
 }  
-  
+  															
 function createArrowEntity(imageSrc, angle){
   arrowId = imageSrc + arrowId + 1;
   var arrowEntity = document.createElement('a-image');
@@ -234,20 +242,28 @@ function createArrowEntity(imageSrc, angle){
   arrowEntity.setAttribute('src', imageSrc);
   arrowEntity.setAttribute('rotation', {x: -90, y: 0, z: angle});
   arrowEntity.setAttribute('scale', {x: 1.63, y: 3.28, z: 0.01});
-  if(imageSrc == "#blue_arrow"){
-    arrowEntity.setAttribute('position', {x: R*Math.cos(toRadians(angle+90)), y: 0, z: R*Math.sin(toRadians(angle-90))});
-  }
-  else{
-    arrowEntity.setAttribute('position', {x: R*Math.cos(toRadians(angle+90)), y: -0.9, z: R*Math.sin(toRadians(angle-90))});
-  }				      
+	arrowEntity.setAttribute('material', "depthTest: false; transparent: true")																			
+	if(imageSrc == "#blue_arrow"){
+		arrowEntity.setAttribute('position', {x: R*Math.cos(toRadians(angle+90)), y: 0, z: R*Math.sin(toRadians(angle-90))});
+		arrowEntity.setAttribute('render-order', "1")													
+	}
+	else{
+		arrowEntity.setAttribute('position', {x: R*Math.cos(toRadians(angle+90)), y: 0, z: R*Math.sin(toRadians(angle-90))});
+		arrowEntity.setAttribute('render-order', "0")																						 
+	}				      
+  
   
   return arrowEntity;
-}  
+}  															
+
+
 
 function createTextEntity(textValue, textColor, size, position){
   var textEntity = document.createElement('a-entity');
-  var textParamas = "value:" + textValue + "; color:" + textColor + ";shader: msdf; font:https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/fonts/Roboto-Bold-msdf.json; negate:false; align:center" 
+  var textParamas = "value:" + textValue + "; color:" + textColor + ";shader: msdf; font:fonts/Roboto-Bold-msdf.json; negate:false; align:center" 
   
+  textEntity.setAttribute('material', "depthTest: false; transparent: true")	
+  textEntity.setAttribute('render-order', "3")								
   textEntity.setAttribute('text', textParamas);
   textEntity.setAttribute('scale', {x: size, y: size, z: 0.1});
   textEntity.setAttribute('position', position);
@@ -429,6 +445,74 @@ function getOtherDestinations(originDestination) {
         console.log("Error " + err);
       }); 
 }  
+			    
+class ImageDataEntity {
+  constructor(qdata) {
+     this.qdata = qdata;  
+  }
+}																		 
+
+																																																																								 
+function decodeQR(imageData){
+	// https://192.168.0.103:8443/qr2
+  fetch("https://api01-b.hekate.club/devTools/decodeQR", {							 
+  method: 'POST', // or 'PUT'
+  headers: {
+      'Content-Type': 'application/json'
+  },  						       
+  body: JSON.stringify(imageData)
+  }).then(function(response) {
+  	return response.json();
+  }).then(function(data) { 
+		if(data.qdata != null)
+		{
+			document.querySelector("#detectedqr").innerHTML = data.qdata;
+		}
+  	 return data;
+  }).catch(function(err) {
+  	console.log("Error " + err);
+  });																																																																						 
+}			
+																
+var timer; 																
+          
+function startTimer() { 
+	timer = setInterval(function() {     
+   	//var imageData = new ImageDataEntity(takeSnapshot())
+	//console.log(imageData);
+	//callMyLocal(imageData);
+	var video = document.querySelector('video')
+	var imageData = new ImageDataEntity(takeSnapshot(video));
+	//console.log(JSON.stringify(imageData))
+	decodeQR(imageData);
+	}, 1000); 
+} 
+
+function stopTimer() { 
+	clearInterval(timer);  
+}	
+
+function takeSnapshot(video){
+	// Here we're using a trick that involves a hidden canvas element.  
+	var hidden_canvas = document.querySelector('canvas'),
+	context = hidden_canvas.getContext('2d');
+
+	var width = video.videoWidth,
+	height = video.videoHeight;
+
+	if (width && height) {
+		// Setup a canvas with the same dimensions as the video.
+		hidden_canvas.width = width;
+		hidden_canvas.height = height;
+		hidden_canvas.style.visibility = "hidden";
+
+		// Make a copy of the current frame in the video on the canvas.
+		context.drawImage(video, 0, 0, width, height);
+
+		// Turn the canvas image into a dataURL that can be used as a src for our photo.
+		return hidden_canvas.toDataURL('image/png');
+	}
+}			    
 
 </script>
 </body>
