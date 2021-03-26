@@ -290,10 +290,20 @@ function decodeQR(imageData){
   }).then(function(response) {
   	return response.json();
   }).then(function(data) { 
-		if(data.qdata != null)
+	if(data.qdata != null)
+	{
+		var url_string = data.qdata
+		var url = new URL(url_string);
+		var ori = url.searchParams.get("ori");
+		if(ori != null)		  
 		{
+			document.querySelector("#detectedqr").innerHTML = ori;
+		}
+		else
+		{																		
 			document.querySelector("#detectedqr").innerHTML = data.qdata;
 		}
+	}
   	 return data;
   }).catch(function(err) {
   	console.log("Error " + err);
