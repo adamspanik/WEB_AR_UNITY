@@ -106,8 +106,8 @@ function createCompleteOtherDestinations(otherDestinations){
 function drawDestinations(){ 
 var targetDestination = "Q160"  
 var originDestination = "Q407"  
-var mainDestination = await getMainDestination(originDestination, targetDestination);
-var otherDestinations = await getOtherDestinations(originDestination);		      
+var mainDestination = getMainDestination(originDestination, targetDestination);
+var otherDestinations = getOtherDestinations(originDestination);		      
 }
 	  
 function createSign(destination){
