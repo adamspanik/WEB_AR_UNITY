@@ -1,42 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta name="description"content="Web site created using create-react-app"/>
+<html>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>NNF AFRAME</title>	
+<!-- include aframe -->
+<script src="https://aframe.io/releases/1.2.0/aframe.js"></script>
+<!-- include ar.js -->
+<script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+<script src="https://unpkg.com/aframe-render-order-component@1.0.0/dist/aframe-render-order-component.min.js"></script>
+<script src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/scripts/jsQR.js"></script>
+<body style='margin : 0px; overflow: hidden; font-family: Monospace;'>
+	<div style="text-align:center; font-size:12px; color:white;">
+		<p id="detectedqr">DETECTING QR: </p>
+	</div>	
 
-    <script src="https://aframe.io/releases/1.2.0/aframe.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-    <script src="https://unpkg.com/aframe-render-order-component@1.0.0/dist/aframe-render-order-component.min.js"></script>
-    <script src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/scripts/jsQR.js"></script>
-    <title>NNF NAVIGACE</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div style="text-align:center; font-size:12px; color:white;">
-        <p id="detectedqr">DETECTING QR: </p>
-    </div>	
-    <a-scene device-orientation-permission-ui="enabled: false" [renderer]="logarithmicDepthBuffer: true;" embedded arjs=’sourceType: webcam; trackingMethod:best;’ vr-mode-ui='enabled: false'>
-    <canvas visibility="hidden"></canvas>	
-    <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .intersectable; useWorldCoordinates: true;"></a-entity>
-    <a-assets>
-	    <img id="blue_arrow" src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/images/Modra.png" crossorigin="anonymous"></img>
-	    <img id="white_arrow" src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/images/Bila.png" crossorigin="anonymous"></img>
-	    <img id="label" src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/images/label.png" crossorigin="anonymous"></img>
-	    <img id="label_stack2" src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/images/label_stack2.png" crossorigin="anonymous"></img>
-	    <img id="label_stack3" src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/images/label_stack3.png" crossorigin="anonymous"></img>
-	    <img id="door_icon" src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/images/door_icon.png" crossorigin="anonymous"></img>
-	    <img id="exit_icon" src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/images/exit_icon.png" crossorigin="anonymous"></img>
-    </a-assets>
-    <a-marker id="arrow_marker" type='pattern' url='https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/markers/arrow_marker.patt' emitevents="true" smooth="true" smoothCount="10" smoothTolerance="0.01" smoothThreshold="5"> 
-      <a-entity lookathandler id="lookathandler" position="0 0 0" rotation="-90 0 0"></a-entity>
-      <a-entity wrapper id='wrapper' position="0 0 0" emitevents='true'>                                                                              
-    </a-marker>								   
-    <a-entity camera></a-entity>
-    </a-scene>
-    <div id="ARKO"></div>
-    								   
+	<a-scene device-orientation-permission-ui="enabled: false" [renderer]="logarithmicDepthBuffer: true;" embedded arjs=’sourceType: webcam; trackingMethod:best;’ vr-mode-ui='enabled: false'>
+	<canvas visibility="hidden"></canvas>	
+	<a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .intersectable; useWorldCoordinates: true;"></a-entity>
+	<a-assets>
+		<img id="blue_arrow" src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/images/Modra.png"></img>
+		<img id="white_arrow" src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/images/Bila.png"></img>
+		<img id="label" src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/images/label.png"></img>
+		<img id="label_stack2" src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/images/label_stack2.png"></img>
+		<img id="label_stack3" src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/images/label_stack3.png"></img>
+		<img id="door_icon" src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/images/door_icon.png"></img>
+		<img id="exit_icon" src="https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/images/exit_icon.png"></img>
+	</a-assets>
+	<a-marker id="arrow_marker" type='pattern' url='https://raw.githubusercontent.com/adamspanik/WEB_AR_UNITY/master/markers/arrow_marker.patt' emitevents="true" smooth="true smoothCount="10" smoothTolerance="0.01" smoothThreshold="5"> 
+		<a-entity lookathandler id="lookathandler" position="0 0 0" rotation="-90 0 0"></a-entity>
+		<a-entity wrapper id="wrapper" position="0 0 0" emitevents="true">                                                                              
+	</a-marker>								   
+	<a-entity camera></a-entity>
+	</a-scene>
+								   
 <script> 
 var listOfArrows = [];
 var listOfSigns = [];
@@ -46,107 +42,104 @@ const R = 3;
 const qTextColor = "#343A3E"
 const mTextColor = "#0055B4"
 var arrowId = 0;
-var camera;
 
   
 window.onload = () => {
-    wrapper = document.querySelector("[wrapper]");
-    camera = document.querySelector("[camera]");
-    lookathandler = document.querySelector("[lookathandler]");
-    drawDestinations();
-    startTimer();
+  wrapper = document.querySelector('[wrapper]');
+  camera = document.querySelector("[camera]");
+  lookathandler = document.querySelector("[lookathandler]");
+  drawDestinations();
+	startTimer();						  
 };    
 							  
 AFRAME.registerComponent('lookathandler', {
-    tick: function () {
-        if(camera != null){
-            var camPosition = camera.object3D.position;	
-            lookathandler.object3D.lookAt(new THREE.Vector3(camPosition.x, camPosition.y, camPosition.z));
-            for (var i = 0; i < listOfSigns.length; i++) 
-            {
-                listOfSigns[i].object3D.rotation.z = lookathandler.object3D.rotation.z
-                listOfSigns[i].object3D.rotation.y = lookathandler.object3D.rotation.y
-            }
-        }
-    }
+tick: function () {																													
+	var camPosition = camera.object3D.position;	
+	for (var i = 0; i < listOfSigns.length; i++) 
+	{
+		listOfSigns[i].object3D.lookAt(camPosition.x, 0, camPosition.z)
+	}
+}
 });							  
   
 function toRadians(degrees) {
-    return degrees * Math.PI / 180;
-}
+	return degrees * Math.PI / 180;
+};
 
 function toDegrees(radians) {
-    return radians * 180 / Math.PI;
+	return radians * 180 / Math.PI;
 }
 
 function createCompleteMainDestination(mainDestination){
-    console.log(mainDestination)
-    var arrow = createArrowEntity("#blue_arrow", mainDestination.angle);
-    listOfArrows.push(arrow);
-    wrapper.appendChild(arrow); 
-    var sign = createSignDestination(mainDestination);
-    listOfSigns.push(sign);
-    wrapper.appendChild(sign);
+  console.log(mainDestination)
+  var arrow = createArrowEntity("#blue_arrow", mainDestination.angle);
+  listOfArrows.push(arrow);
+  wrapper.appendChild(arrow); 
+  var sign = createSignDestination(mainDestination);
+  listOfSigns.push(sign);
+  wrapper.appendChild(sign);
 }
 
 function createCompleteOtherDestinations(otherDestinations){
-    console.log(otherDestinations)
-    for (var [key, value] of otherDestinations) {
-        var arrow = createArrowEntity("#white_arrow", key);
-        listOfArrows.push(arrow);
-        wrapper.appendChild(arrow);  
-        if(value.length == 1){
-            var sign = createSign(value[0]);
-            listOfSigns.push(sign);
-            wrapper.appendChild(sign);    
-        }
-        if(value.length == 2){
-            var sign = createSignStack2(value);
-            listOfSigns.push(sign);
-            wrapper.appendChild(sign);  
-        }
-        if(value.length == 3){
-            var sign = createSignStack3(value);
-            listOfSigns.push(sign);
-            wrapper.appendChild(sign);  
-        }
+  console.log(otherDestinations)
+  for (var [key, value] of otherDestinations) {
+    var arrow = createArrowEntity("#white_arrow", key);
+    listOfArrows.push(arrow);
+    wrapper.appendChild(arrow);  
+    if(value.length == 1){
+      var sign = createSign(value[0]);
+      listOfSigns.push(sign);
+      wrapper.appendChild(sign);    
     }
+    if(value.length == 2){
+      var sign = createSignStack2(value);
+      listOfSigns.push(sign);
+      wrapper.appendChild(sign);  
+    }
+    if(value.length == 3){
+      var sign = createSignStack3(value);
+      listOfSigns.push(sign);
+      wrapper.appendChild(sign);  
+    }
+  }
 }
   
-function drawDestinations(){ 
-    var targetDestination = "Q160"  
-    var originDestination = "Q407"  
-    var mainDestination = getMainDestination(originDestination, targetDestination);
-    var otherDestinations = getOtherDestinations(originDestination);
+async function drawDestinations(){ 
+var targetDestination = "Q160"  
+var originDestination = "Q407"  
+var otherDestinations = getOtherDestinations(originDestination);
+var mainDestination = await getMainDestination(originDestination, targetDestination);	
+console.log(otherDestinations)	
+console.log(mainDestination)				      
 }
 	  
-function createSign(angle){
-    var sign = createSignEntity(angle); 
-    var label = createImageEntity("#label", new THREE.Vector3(1.52, 1.08, 0.01), new THREE.Vector3(0, 0, 0), "2");
-    var dest_icon = createImageEntity("#exit_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, 0.19, 0), "3");
-    var text_q = createTextEntity("Q4234", "#343A3E", 5, new THREE.Vector3(0.2, 0.2, 0));
-    var text_m = createTextEntity("150 m", "#0055B4", 4, new THREE.Vector3(0.2, -0.2, 0));
+function createSign(destination){
+  var sign = createSignEntity(destination.angle); 
+  var label = createImageEntity("#label", new THREE.Vector3(1.52, 1.08, 0.01), new THREE.Vector3(0, 0, 0), "2");
+  var dest_icon = createImageEntity("#exit_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, 0.19, 0), "3");
+  var text_q = createTextEntity(destination.name, qTextColor, 5, new THREE.Vector3(0.2, 0.2, 0));
+  var text_m = createTextEntity(parseInt(destination.distance) + " m", mTextColor, 4, new THREE.Vector3(0.2, -0.2, 0));
   
-    sign.appendChild(label);
-    sign.appendChild(dest_icon);
-    sign.appendChild(text_q);
-    sign.appendChild(text_m);
+  sign.appendChild(label);
+  sign.appendChild(dest_icon);
+  sign.appendChild(text_q);
+  sign.appendChild(text_m);
      
-    return sign;
+  return sign;
 }
   
-function createSignStack2(angle){
-  var sign = createSignEntity(angle); 
+function createSignStack2(destinations){
+  var sign = createSignEntity(destinations[0].angle); 
   
   var label = createImageEntity("#label_stack2", new THREE.Vector3(1.52, 1.762, 0.01), new THREE.Vector3(0, 0, 0), "2");
   
   var dest_icon = createImageEntity("#exit_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, 0.59, 0), "3");
-  var text_q = createTextEntity("Q4234", "#343A3E", 5, new THREE.Vector3(0.2, 0.6, 0));
-  var text_m = createTextEntity("150 m", "#0055B4", 4, new THREE.Vector3(0.2, 0.25, 0));
+  var text_q = createTextEntity(destinations[0].name, qTextColor, 5, new THREE.Vector3(0.2, 0.6, -0.3));
+  var text_m = createTextEntity(parseInt(destinations[0].distance) + " m", mTextColor, 4, new THREE.Vector3(0.2, 0.25, 0));
   
   var dest_icon2 = createImageEntity("#exit_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, -0.26, 0), "3");
-  var text_q2 = createTextEntity("Q4234", "#343A3E", 5, new THREE.Vector3(0.2, -0.25, 0));
-  var text_m2 = createTextEntity("150 m", "#0055B4", 4, new THREE.Vector3(0.2, -0.6, 0));
+  var text_q2 = createTextEntity(destinations[1].name, qTextColor, 5, new THREE.Vector3(0.2, -0.25, 0));
+  var text_m2 = createTextEntity(parseInt(destinations[1].distance) + " m", mTextColor, 4, new THREE.Vector3(0.2, -0.6, 0));
   
   sign.appendChild(label);
   sign.appendChild(dest_icon);
@@ -157,37 +150,37 @@ function createSignStack2(angle){
   sign.appendChild(text_m2);
   
   return sign;
-}   
+}  
   
-function createSignStack3(angle){
-    var sign = createSignEntity(angle);  
-    var label = createImageEntity("#label_stack3", new THREE.Vector3(1.52, 2.736, 0.01), new THREE.Vector3(0, 0, 0), "2");
+function createSignStack3(destinations){
+  var sign = createSignEntity(destinations[0].angle);  
+  var label = createImageEntity("#label_stack3", new THREE.Vector3(1.52, 2.736, 0.01), new THREE.Vector3(0, 0, 0), "2");
   
-    var dest_icon = createImageEntity("#exit_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, 0.99, 0), "3");
-    var text_q = createTextEntity("Q4234", "#343A3E", 5, new THREE.Vector3(0.2, 1, 0)); 
-    var text_m = createTextEntity("150 m", "#0055B4", 4, new THREE.Vector3(0.2, 0.65, 0));
+  var dest_icon = createImageEntity("#exit_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, 0.99, 0), "3");
+  var text_q = createTextEntity(destinations[0].name, qTextColor, 5, new THREE.Vector3(0.2, 1, -0.3)); 
+  var text_m = createTextEntity(parseInt(destinations[0].distance) + " m", mTextColor, 4, new THREE.Vector3(0.2, 0.65, 0));
   
-    var dest_icon2 = createImageEntity("#exit_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, 0.14, 0), "3");
-    var text_q2 = createTextEntity("Q4234", "#343A3E", 5, new THREE.Vector3(0.2, 0.15, 0));
-    var text_m2 = createTextEntity("150 m", "#0055B4", 4, new THREE.Vector3(0.2, -0.2, 0));
+  var dest_icon2 = createImageEntity("#exit_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, 0.14, 0), "3");
+  var text_q2 = createTextEntity(destinations[1].name, qTextColor, 5, new THREE.Vector3(0.2, 0.15, 0));
+  var text_m2 = createTextEntity(parseInt(destinations[1].distance) + " m", mTextColor, 4, new THREE.Vector3(0.2, -0.2, 0));
   
-    var dest_icon3 = createImageEntity("#exit_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, -0.66, 0), "3");
-    var text_q3 = createTextEntity("Q4234", "#343A3E", 5, new THREE.Vector3(0.2, -0.65, 0));
-    var text_m3 = createTextEntity("150 m", "#0055B4", 4, new THREE.Vector3(0.2, -1, 0));
+  var dest_icon3 = createImageEntity("#exit_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, -0.66, 0), "3");
+  var text_q3 = createTextEntity(destinations[2].name, qTextColor, 5, new THREE.Vector3(0.2, -0.65, 0));
+  var text_m3 = createTextEntity(parseInt(destinations[2].distance) + " m", mTextColor, 4, new THREE.Vector3(0.2, -1, 0));
+																																																																							
+  sign.appendChild(label);
+  sign.appendChild(dest_icon);
+  sign.appendChild(text_q);
+  sign.appendChild(text_m);
+  sign.appendChild(dest_icon2);
+  sign.appendChild(text_q2);
+  sign.appendChild(text_m2);
+  sign.appendChild(dest_icon3);
+  sign.appendChild(text_q3);
+  sign.appendChild(text_m3);
   
-    sign.appendChild(label);
-    sign.appendChild(dest_icon);
-    sign.appendChild(text_q);
-    sign.appendChild(text_m);
-    sign.appendChild(dest_icon2);
-    sign.appendChild(text_q2);
-    sign.appendChild(text_m2);
-    sign.appendChild(dest_icon3);
-    sign.appendChild(text_q3);
-    sign.appendChild(text_m3);
-  
-    return sign;
-}       
+  return sign;
+}    
 
 function timeRound(time, step) {
     step || (step = 1.0);
@@ -196,264 +189,274 @@ function timeRound(time, step) {
 } 
  
 function msToTime(ms){
-    var minutes = timeRound((ms / (1000 * 60)).toFixed(1), 0.5);
-    return minutes + " min" ;        
+  var minutes = timeRound((ms / (1000 * 60)).toFixed(1), 0.5);
+  return minutes + " min" ;        
 }  
   
-function createSignDestination(angle){
-    var sign = createSignEntity(angle);
+function createSignDestination(destination){
+  var sign = createSignEntity(destination.angle);
+  																																		 
+	var label = createImageEntity("#label", new THREE.Vector3(2.128, 1.512, 0.01), new THREE.Vector3(0, 0, 0), "2");
+  var dest_icon = createImageEntity("#door_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, -0.06, 0), "3");
+  var text_d = createTextEntity("MŮJ CÍL", mTextColor, 6, new THREE.Vector3(0, 0.35, 0));  
+  var text_m = createTextEntity(parseInt(destination.distance) + " m", mTextColor, 4, new THREE.Vector3(0.5, -0.4, 0));
+  var text_q = createTextEntity(destination.name, qTextColor, 5, new THREE.Vector3(0.2, -0.05, 0));
+  var text_t = createTextEntity(msToTime(destination.time), mTextColor, 4, new THREE.Vector3(-0.5, -0.4, 0));																																	 
   
-    var label = createImageEntity("#label", new THREE.Vector3(2.128, 1.512, 0.01), new THREE.Vector3(0, 0, 0), "2");
-    var dest_icon = createImageEntity("#door_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, -0.06, 0), "3");
-    var text_d = createTextEntity("MŮJ CÍL", "#0055B4", 6, new THREE.Vector3(0, 0.35, 0));  
-    var text_m = createTextEntity("150 m", "#0055B4", 4, new THREE.Vector3(0.5, -0.4, 0));
-    var text_q = createTextEntity("Q4234", "#343A3E", 5, new THREE.Vector3(0.2, -0.05, 0));
-    var text_t = createTextEntity("3 min", "#0055B4", 4, new THREE.Vector3(-0.5, -0.4, 0));
+  sign.appendChild(label);
+  sign.appendChild(text_d);
+  sign.appendChild(dest_icon);
+  sign.appendChild(text_q);
+  sign.appendChild(text_m);
+  sign.appendChild(text_t);
   
-    sign.appendChild(label);
-    sign.appendChild(dest_icon);						  
-    sign.appendChild(text_d); 
-    sign.appendChild(text_q);
-    sign.appendChild(text_m);
-    sign.appendChild(text_t);
-  
-    return sign;
-}    
+  return sign;
+}  
 
 function createImageEntity(imageSrc, scale, position, renderOrder){
-    imageId = imageSrc + arrowId + 1;
-    var imageEntity = document.createElement('a-image');  
+  imageId = imageSrc + arrowId + 1;
+  var imageEntity = document.createElement('a-image');  
 						  
-    imageEntity.setAttribute('id', imageId);
-    imageEntity.setAttribute('src', imageSrc);
-    imageEntity.setAttribute('scale', scale);
-    imageEntity.setAttribute('position', position);
-    imageEntity.setAttribute('material', "depthTest: false; transparent: true");	
-    imageEntity.setAttribute('render-order', renderOrder)							 
+  imageEntity.setAttribute('id', imageId);
+  imageEntity.setAttribute('src', imageSrc);
+  imageEntity.setAttribute('scale', scale);
+  imageEntity.setAttribute('position', position);
+  imageEntity.setAttribute('material', "depthTest: false; transparent: true");	
+  imageEntity.setAttribute('render-order', renderOrder)							 
 
   
-    return imageEntity;
-}
-
+  return imageEntity;
+}																																		 
+																																		 
 function createSignEntity(angle){
-    var signEntity = document.createElement('a-entity');
-    signEntity.setAttribute('id', "sign" + arrowId);
-    signEntity.setAttribute('rotation', {x: -90, y: 0, z: angle});
-    signEntity.setAttribute('position', {x: R*Math.cos(toRadians(angle+90)), y: 0, z: R*Math.sin(toRadians(angle-90))});
+  var signEntity = document.createElement('a-entity');
+  signEntity.setAttribute('id', "sign" + arrowId);
+  signEntity.setAttribute('rotation', {x: -90, y: 0, z: angle});
+  signEntity.setAttribute('position', {x: R*Math.cos(toRadians(angle+90)), y: 0.0, z: R*Math.sin(toRadians(angle-90))});
   
-    return signEntity;
-} 
-  
-function createArrowEntity(imageSrc, angle){
-    arrowId = imageSrc + arrowId + 1;
-    var arrowEntity = document.createElement('a-image');
-    arrowEntity.setAttribute('id', arrowId);
-    arrowEntity.setAttribute('src', imageSrc);
-    arrowEntity.setAttribute('rotation', {x: -90, y: 0, z: angle});
-    arrowEntity.setAttribute('scale', {x: 1.63, y: 3.28, z: 0.01});
-    arrowEntity.setAttribute('material', "depthTest: false; transparent: true")																			
-    if(imageSrc == "#blue_arrow"){
-	    arrowEntity.setAttribute('position', {x: R*Math.cos(toRadians(angle+90)), y: 0, z: R*Math.sin(toRadians(angle-90))});
-	    arrowEntity.setAttribute('render-order', "1")													
-    }
-    else{
-	    arrowEntity.setAttribute('position', {x: R*Math.cos(toRadians(angle+90)), y: 0, z: R*Math.sin(toRadians(angle-90))});
-	    arrowEntity.setAttribute('render-order', "0")																						 
-    }				      
-  
-  
-    return arrowEntity;
+  return signEntity;
 }  
+  															
+function createArrowEntity(imageSrc, angle){
+  arrowId = imageSrc + arrowId + 1;
+  var arrowEntity = document.createElement('a-image');
+  arrowEntity.setAttribute('id', arrowId);
+  arrowEntity.setAttribute('src', imageSrc);
+  arrowEntity.setAttribute('rotation', {x: -90, y: 0, z: angle});
+  arrowEntity.setAttribute('scale', {x: 1.63, y: 3.28, z: 0.01});
+	arrowEntity.setAttribute('material', "depthTest: false; transparent: true")																			
+	if(imageSrc == "#blue_arrow"){
+		arrowEntity.setAttribute('position', {x: R*Math.cos(toRadians(angle+90)), y: 0, z: R*Math.sin(toRadians(angle-90))});
+		arrowEntity.setAttribute('render-order', "1")													
+	}
+	else{
+		arrowEntity.setAttribute('position', {x: R*Math.cos(toRadians(angle+90)), y: 0, z: R*Math.sin(toRadians(angle-90))});
+		arrowEntity.setAttribute('render-order', "0")																						 
+	}				      
+  
+  
+  return arrowEntity;
+}  															
+
+
 
 function createTextEntity(textValue, textColor, size, position){
-    var textEntity = document.createElement('a-entity');
-    var textParamas = "value:" + textValue + "; color:" + textColor + ";shader: msdf; font:fonts/Roboto-Bold-msdf.json; negate:false; align:center" 
-    //var textParamas = "value:" + textValue + "; color:" + textColor + ";  align:center" 
+  var textEntity = document.createElement('a-entity');
+  var textParamas = "value:" + textValue + "; color:" + textColor + ";shader: msdf; font:fonts/Roboto-Bold-msdf.json; negate:false; align:center" 
   
-
-    textEntity.setAttribute('material', "depthTest: false; transparent: true")	
-    textEntity.setAttribute('render-order', "3")								
-    textEntity.setAttribute('text', textParamas);
-    textEntity.setAttribute('scale', {x: size, y: size, z: 0.1});
-    textEntity.setAttribute('position', position);
+  textEntity.setAttribute('material', "depthTest: false; transparent: true")	
+  textEntity.setAttribute('render-order', "3")								
+  textEntity.setAttribute('text', textParamas);
+  textEntity.setAttribute('scale', {x: size, y: size, z: 0.1});
+  textEntity.setAttribute('position', position);
   
-    return textEntity;
+  return textEntity;
 } 
 
 class Destination {
-    constructor(name, lat, lon, level, distance) {
-        this.name = name;  
-        this.lat = lat; 
-        this.lon = lon; 
-        this.level = level; 
-        this.distance = distance; 
-    }
+  constructor(name, lat, lon, level, distance) {
+     this.name = name;  
+     this.lat = lat; 
+     this.lon = lon; 
+     this.level = level; 
+     this.distance = distance; 
+  }
 }
 
 function getAngle(startLat, startLng, destLat, destLng) {             
-    startLat = toRadians(startLat);
-    startLng = toRadians(startLng);
-    destLat = toRadians(destLat);
-    destLng = toRadians(destLng);
+        startLat = toRadians(startLat);
+        startLng = toRadians(startLng);
+        destLat = toRadians(destLat);
+        destLng = toRadians(destLng);
 
-    var y = Math.sin(destLng - startLng) * Math.cos(destLat);
-    var x = Math.cos(startLat) * Math.sin(destLat) -
-    Math.sin(startLat) * Math.cos(destLat) * Math.cos(destLng - startLng);
-    var angle = Math.atan2(y, x);
-    angle = (toDegrees(angle) + 360) % 360;
+        var y = Math.sin(destLng - startLng) * Math.cos(destLat);
+        var x = Math.cos(startLat) * Math.sin(destLat) -
+              Math.sin(startLat) * Math.cos(destLat) * Math.cos(destLng - startLng);
+        var angle = Math.atan2(y, x);
+        angle = (toDegrees(angle) + 360) % 360;
 
-    return Math.round(angle * 10) / 10;
+        return Math.round(angle * 10) / 10;
 }
 
 
 function addValueToKey(map, key, keyValue) {     
-    if(map.has(key))
-    {
-        map.get(key).push(keyValue)
-    }
-    else
-    {
-        map.set(key, [keyValue])
-    }
+  if(map.has(key))
+  {
+     map.get(key).push(keyValue)
+  }
+  else
+  {
+      map.set(key, [keyValue])
+  }
 }
 
 function stackAngles(listOfDestinations) {
-    for (var i = 0; i < listOfDestinations.length-1; i++) {
-        var sameAngle =  []
-        for (var j = i+1; j < listOfDestinations.length; j++) {
-            if(i != j){
-                var dif = Math.abs(listOfDestinations[i].angle - listOfDestinations[j].angle) % 360;       // This is either the distance or 360 - distance
-                var angleDiff = dif > 180 ? 360 - dif : dif;
-                if(angleDiff < 45)
-                {
-                    sameAngle.push(listOfDestinations[j])
-                }
-            }
-        }
-        if(sameAngle.length > 0)
-        {
-            sameAngle.push(listOfDestinations[i])
-            var angleSum = 0;
-            for (var k = 0; k < sameAngle.length; k++) {
-                angleSum = angleSum + sameAngle[k].angle
-            }
-            var finalAngle = angleSum / sameAngle.length
-            for (var l = 0; l < sameAngle.length; l++) {
-                sameAngle[l].angle = finalAngle
-            }
-        }
+for (var i = 0; i < listOfDestinations.length-1; i++) {
+  var sameAngle =  []
+  for (var j = i+1; j < listOfDestinations.length; j++) {
+    if(i != j){
+      var dif = Math.abs(listOfDestinations[i].angle - listOfDestinations[j].angle) % 360;       // This is either the distance or 360 - distance
+      var angleDiff = dif > 180 ? 360 - dif : dif;
+      if(angleDiff < 45)
+      {
+        sameAngle.push(listOfDestinations[j])
+      }
     }
-    return listOfDestinations;
+  }
+  if(sameAngle.length > 0)
+  {
+    sameAngle.push(listOfDestinations[i])
+    var angleSum = 0;
+    for (var k = 0; k < sameAngle.length; k++) {
+       angleSum = angleSum + sameAngle[k].angle
+    }
+    var finalAngle = angleSum / sameAngle.length
+    for (var l = 0; l < sameAngle.length; l++) {
+       sameAngle[l].angle = finalAngle
+    }
+  }
+}
+return listOfDestinations;
 }
 
-function getMainDestination(originDestination, targetDestination){
-    var originLat;
-    var originLon;                                     
-    var navigationSignOrientation; 
-    fetch("https://api01-b.hekate.club/devTools/navigationSign?signId=" + originDestination).then(function(response) {
+async function getMainDestination(originDestination, targetDestination){
+      var originLat;
+      var originLon;                                     
+      var navigationSignOrientation; 
+      fetch("https://api01-b.hekate.club/devTools/navigationSign?signId=" + originDestination).then(function(response) {
         return response.json();
-    }).then(function(data) {
+      }).then(function(data) {
         originLat = data.lat
         originLon = data.lon
         navigationSignOrientation = data.orientation       
-    }).catch(function(err) {
+      }).catch(function(err) {
         console.log("Error " + err);
-}); 
+      }); 
         
-fetch("https://api01-b.hekate.club/devTools/path?destination=" + targetDestination + "&encoder=FOOT&origin=" + originDestination).then(function(response) {
-    return response.json();
-}).then(function(data) { 
-    var time = 0;
-    var distance = 0;
-    var gotFirstPoi = false;
-    var targetDestination;
-    for (var i = 0; i < data.instructions.length; i++) {
-        time = time + data.instructions[i].time
-        distance = distance + data.instructions[i].distance
-            if(!gotFirstPoi && data.instructions[i].poiList.length > 0){
-            gotFirstPoi = true
-            var startLat = data.geoJson.features[i].geometry.coordinates[0][1];
-            var startLng = data.geoJson.features[i].geometry.coordinates[0][0];
-            var endLat = data.instructions[i].poiList[0].lat;
-            var endLng = data.instructions[i].poiList[0].lon;
-            var angle = (getAngle(startLat, startLng, endLat, endLng) + 180 - navigationSignOrientation) % 360; 
-            targetDestination = new Destination(data.instructions[i].poiList[0].name,
-                data.instructions[i].poiList[0].lat,
-                data.instructions[i].poiList[0].lon,
-                null);   
-            targetDestination.angle = angle                                
-        }
-    }
+          fetch("https://api01-b.hekate.club/devTools/path?destination=" + targetDestination + "&encoder=FOOT&origin=" + originDestination).then(function(response) {
+            return response.json();
+          }).then(function(data) { 
+            var time = 0;
+            var distance = 0;
+            var gotFirstPoi = false;
+            var targetDestination;
+            for (var i = 0; i < data.instructions.length; i++) {
+                time = time + data.instructions[i].time
+                distance = distance + data.instructions[i].distance
+                if(!gotFirstPoi && data.instructions[i].poiList.length > 0){
+                    gotFirstPoi = true
+                    var startLat = data.geoJson.features[i].geometry.coordinates[0][1];
+                    var startLng = data.geoJson.features[i].geometry.coordinates[0][0];
+                    var endLat = data.instructions[i].poiList[0].lat;
+                    var endLng = data.instructions[i].poiList[0].lon;
+                    var angle = (getAngle(startLat, startLng, endLat, endLng) + 180 - navigationSignOrientation) % 360; 
+                    targetDestination = new Destination(data.instructions[i].poiList[0].name,
+                                        data.instructions[i].poiList[0].lat,
+                                        data.instructions[i].poiList[0].lon,
+                                        null);   
+                    targetDestination.angle = angle                                
+                }
+            }
 
-    targetDestination.distance = distance
-    targetDestination.time = time
+             targetDestination.distance = distance
+             targetDestination.time = time
                           
-    createCompleteMainDestination(targetDestination);
+             createCompleteMainDestination(targetDestination);
              
-    return targetDestination
-    }).catch(function(err) {
-        console.log("Error " + err);
-    });
+             return targetDestination
+          }).catch(function(err) {
+            console.log("Error " + err);
+          });
 }
 
 function getOtherDestinations(originDestination) {         
-/*
-var originLat = 50.04796385872283
-var originLon = 14.304586074603783
-*/
-var originLat;
-var originLon;
-var originLevel = 2
+      <!--
+      var originLat = 50.04796385872283
+      var originLon = 14.304586074603783
+      -->
+      var originLat;
+      var originLon;
+      var originLevel = 2
                                     
-var destinations = new Map()   
-var navigationSignOrientation; 
-fetch("https://api01-b.hekate.club/devTools/navigationSign?signId=" + originDestination).then(function(response) {
-    return response.json();
-}).then(function(data) {
-    originLat = data.lat
-    originLon = data.lon
-    navigationSignOrientation = data.orientation
-    for (var i = 0; i < data.navItems.length; i++) {
-        for (var j = 0; j < data.navItems[i].POI.length; j++) {
-            if(data.navItems[i].POI[j] !== undefined)
-            {
-                if(data.navItems[i].POI[j].name !== undefined && !data.navItems[i].POI[j].name.includes("D"))
-                {
-                    var level =  data.navItems[i].POI[j].level
-                    /* .split(";")[0] */
-                    destinations.set(data.navItems[i].POI[j].name,
-                        new Destination(data.navItems[i].POI[j].name,
-                        data.navItems[i].POI[j].lat,
-                        data.navItems[i].POI[j].lon,
-                        level,
-                        data.navItems[i].POI[j].distance))
-                }
-            }
+      var destinations = new Map()   
+      var navigationSignOrientation; 
+      fetch("https://api01-b.hekate.club/devTools/navigationSign?signId=" + originDestination).then(function(response) {
+        return response.json();
+      }).then(function(data) {
+        originLat = data.lat
+        originLon = data.lon
+        navigationSignOrientation = data.orientation
+        for (var i = 0; i < data.navItems.length; i++) {
+         for (var j = 0; j < data.navItems[i].POI.length; j++) {
+           if(data.navItems[i].POI[j] !== undefined)
+           {
+             if(data.navItems[i].POI[j].name !== undefined && !data.navItems[i].POI[j].name.includes("D"))
+             {
+                var level =  data.navItems[i].POI[j].level
+                <!-- .split(";")[0] --->
+                destinations.set(data.navItems[i].POI[j].name,
+                 new Destination(data.navItems[i].POI[j].name,
+                   data.navItems[i].POI[j].lat,
+                   data.navItems[i].POI[j].lon,
+                   level,
+                   data.navItems[i].POI[j].distance          
+                   ))
+             }
+           }
+         }
         }
-    }
-    var listOfDestinations = [];
-    console.log(destinations)
-    for (var [key, value] of destinations) {
-        var angle = (getAngle(originLat, originLon, value.lat, value.lon) + 180 - navigationSignOrientation) % 360; 
-        value.angle = angle   
-        listOfDestinations.push(value)
-    }
+			       
+	 destinations.set("test",
+                 new Destination("test",
+                   50.14800287382,
+                   14.10461297704,
+                   "2",
+                   10          
+                   ))
+			       
+        var listOfDestinations = [];
+        console.log(destinations)
+         for (var [key, value] of destinations) {
+          var angle = (getAngle(originLat, originLon, value.lat, value.lon) + 180 - navigationSignOrientation) % 360; 
+          value.angle = angle   
+          listOfDestinations.push(value)
+        }
         
-    listOfStackedDestinations = stackAngles(listOfDestinations)
-    var mapOfDestinations = new Map() ;
-    for(var i = 0; i < listOfStackedDestinations.length; i++)
-    {
-        addValueToKey(mapOfDestinations, listOfStackedDestinations[i].angle, listOfStackedDestinations[i])
-    }
+        listOfStackedDestinations = stackAngles(listOfDestinations)
+        var mapOfDestinations = new Map() ;
+        for(var i = 0; i < listOfStackedDestinations.length; i++)
+        {
+          addValueToKey(mapOfDestinations, listOfStackedDestinations[i].angle, listOfStackedDestinations[i])
+        }
         
-    createCompleteOtherDestinations(mapOfDestinations);   
-
-    return mapOfDestinations;
-}).catch(function(err) {
-    console.log("Error " + err);
-}); 
+        createCompleteOtherDestinations(mapOfDestinations);
+        
+        return mapOfDestinations;
+      }).catch(function(err) {
+        console.log("Error " + err);
+      }); 
 }  
-
+			    
 class ImageDataEntity {
   constructor(qdata) {
      this.qdata = qdata;  
@@ -534,7 +537,7 @@ function takeSnapshot(video){
 		return hidden_canvas.toDataURL('image/png');
 	}
 }
-
+}			    
 </script>
-  </body>
+</body>
 </html>
