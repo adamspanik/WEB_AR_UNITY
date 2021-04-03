@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>NNF AFRAME</title>	
+<script src="https://aframe.io/releases/1.2.0/aframe.js"></script>
+<script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+<script src="https://unpkg.com/aframe-render-order-component@1.0.0/dist/aframe-render-order-component.min.js"></script>
+	
+
+<!-- BEGIN: Middle HTML -->
+<body style='margin : 0px; overflow: hidden; font-family: Monospace;'>
+<!-- <a-scene embedded arjs='debugUIEnabled: false; sourceType: video; sourceUrl:../../data/videos/headtracking.mp4;'>
+arjs='trackingMethod: best; patternRatio: 0.9; debugUIEnabled: false; maxDetectionRate:30;' antialias="true"
+-->
+<a-scene device-orientation-permission-ui="enabled: false" [renderer]="logarithmicDepthBuffer: true;" embedded arjs=’sourceType: webcam; trackingMethod:best;’ vr-mode-ui='enabled: false'>
+<canvas visibility="hidden"></canvas>	
+<a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .intersectable; useWorldCoordinates: true;"></a-entity>
+<!-- END: Middle HTML -->
+
+<!-- BEGIN: Unity Compiled Assets -->
+<a-assets>
+	<img id="blue_arrow" src="images/Modra.png"></img>
+	<img id="white_arrow" src="images/Bila.png"></img>
+	<img id="label" src="images/label.png"></img>
+	<img id="label_stack2" src="images/label_stack2.png"></img>
+	<img id="label_stack3" src="images/label_stack3.png"></img>
+	<img id="door_icon" src="images/door_icon.png"></img>
+	<img id="exit_icon" src="images/exit_icon.png"></img>
+</a-assets>
+<a-marker id="arrow_marker" type='pattern' url='markers/arrow_marker.patt' emitevents="true" smooth="true smoothCount="10" smoothTolerance="0.01" smoothThreshold="5"> 
+  <a-entity lookathandler id="lookathandler" position="0 0 0" rotation="-90 0 0"></a-entity>
+  <a-entity wrapper id="wrapper" position="0 0 0" emitevents="true">                                                                              
+</a-marker>								   
+<!--  <a-entity camera></a-entity> -->
+</a-scene>
+								   			   
+								   
+<script> 
+var listOfArrows = [];
+var listOfSigns = [];
+var wrapper;
+const SCALE = 0.1; // 5
+const R = 3;	
+var arrowId = 0;
+var camera;								   
+
+								   
+window.onload = () => {
+  wrapper = document.querySelector('[wrapper]');
+  camera = document.querySelector("[camera]");
+  lookathandler = document.querySelector("[lookathandler]");
+  drawDestinations();
+};    
+							  
+AFRAME.registerComponent('lookathandler', {
+tick: function () {
+	var camPosition = camera.object3D.position;	
+	//lookathandler.object3D.lookAt(new THREE.Vector3(camPosition.x, camPosition.y, camPosition.z));
+	for (var i = 0; i < listOfSigns.length; i++) 
+	{
+		//listOfSigns[i].object3D.rotation.z = lookathandler.object3D.rotation.z
+		//listOfSigns[i].object3D.rotation.y = lookathandler.object3D.rotation.y
+		  listOfSigns[i].object3D.lookAt(camPosition.x, 0, camPosition.z)
+	}
+}
+});							  
+  
+function toRadians(degrees) {
+	return degrees * Math.PI / 180;
+};
+
+function toDegrees(radians) {
+	return radians * 180 / Math.PI;
+}
+  
+function drawDestinations(){ 
+  var arrow = createArrowEntity("#blue_arrow", 0);
+  listOfArrows.push(arrow);
+  wrapper.appendChild(arrow); 
+  var sign = createSignDestination(0);
+  listOfSigns.push(sign);
+  wrapper.appendChild(sign);
+  
+  for (var i = 1; i < 4; i++) {
+    var arrow = createArrowEntity("#white_arrow", i*75);
+    listOfArrows.push(arrow);
+    wrapper.appendChild(arrow);  
+    if(i==1){
+    var sign = createSign(i*75);
+    listOfSigns.push(sign);
+    wrapper.appendChild(sign);
+    }
+    if(i==2){
+    var sign = createSignStack2(i*75);
+    listOfSigns.push(sign);
+    wrapper.appendChild(sign);
+    }
+    if(i==3){
+    var sign = createSignStack3(i*75);
+    listOfSigns.push(sign);
+    wrapper.appendChild(sign);
+    }
+  }   
+}
+
+function createSignXXX(){
+  var sign = createSignEntity(0); 
+  var label = createImageEntity("#label", new THREE.Vector3(1.52, 1.08, 0.01), new THREE.Vector3(0, 0, 0), "2");
+  var text_q = createTextEntity("xxx", "#343A3E", 5, new THREE.Vector3(0.2, 0.2, 0));
+  
+  sign.appendChild(label);
+  sign.appendChild(text_q);
+     
+  wrapper.appendChild(sign);
+}						
+						
+	  
+function createSign(angle){
+  var sign = createSignEntity(angle); 
+  var label = createImageEntity("#label", new THREE.Vector3(1.52, 1.08, 0.01), new THREE.Vector3(0, 0, 0), "2");
+  var dest_icon = createImageEntity("#exit_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, 0.19, 0), "3");
+  var text_q = createTextEntity("Q4234", "#343A3E", 5, new THREE.Vector3(0.2, 0.2, 0));
+  var text_m = createTextEntity("150 m", "#0055B4", 4, new THREE.Vector3(0.2, -0.2, 0));
+  
+  sign.appendChild(label);
+  sign.appendChild(dest_icon);
+  sign.appendChild(text_q);
+  sign.appendChild(text_m);
+     
+  return sign;
+}
+  
+function createSignStack2(angle){
+  var sign = createSignEntity(angle); 
+  
+  var label = createImageEntity("#label_stack2", new THREE.Vector3(1.52, 1.762, 0.01), new THREE.Vector3(0, 0, 0), "2");
+  
+  var dest_icon = createImageEntity("#exit_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, 0.59, 0), "3");
+  var text_q = createTextEntity("Q4234", "#343A3E", 5, new THREE.Vector3(0.2, 0.6, 0));
+  var text_m = createTextEntity("150 m", "#0055B4", 4, new THREE.Vector3(0.2, 0.25, 0));
+  
+  var dest_icon2 = createImageEntity("#exit_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, -0.26, 0), "3");
+  var text_q2 = createTextEntity("Q4234", "#343A3E", 5, new THREE.Vector3(0.2, -0.25, 0));
+  var text_m2 = createTextEntity("150 m", "#0055B4", 4, new THREE.Vector3(0.2, -0.6, 0));
+  
+  sign.appendChild(label);
+  sign.appendChild(dest_icon);
+  sign.appendChild(text_q);
+  sign.appendChild(text_m);
+  sign.appendChild(dest_icon2);
+  sign.appendChild(text_q2);
+  sign.appendChild(text_m2);
+  
+  return sign;
+}  
+  
+function createSignStack3(angle){
+  var sign = createSignEntity(angle);  
+  var label = createImageEntity("#label_stack3", new THREE.Vector3(1.52, 2.736, 0.01), new THREE.Vector3(0, 0, 0), "2");
+  
+  var dest_icon = createImageEntity("#exit_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, 0.99, 0), "3");
+  var text_q = createTextEntity("Q4234", "#343A3E", 5, new THREE.Vector3(0.2, 1, 0)); 
+  var text_m = createTextEntity("150 m", "#0055B4", 4, new THREE.Vector3(0.2, 0.65, 0));
+  
+  var dest_icon2 = createImageEntity("#exit_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, 0.14, 0), "3");
+  var text_q2 = createTextEntity("Q4234", "#343A3E", 5, new THREE.Vector3(0.2, 0.15, 0));
+  var text_m2 = createTextEntity("150 m", "#0055B4", 4, new THREE.Vector3(0.2, -0.2, 0));
+  
+  var dest_icon3 = createImageEntity("#exit_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, -0.66, 0), "3");
+  var text_q3 = createTextEntity("Q4234", "#343A3E", 5, new THREE.Vector3(0.2, -0.65, 0));
+  var text_m3 = createTextEntity("150 m", "#0055B4", 4, new THREE.Vector3(0.2, -1, 0));
+  
+  sign.appendChild(label);
+  sign.appendChild(dest_icon);
+  sign.appendChild(text_q);
+  sign.appendChild(text_m);
+  sign.appendChild(dest_icon2);
+  sign.appendChild(text_q2);
+  sign.appendChild(text_m2);
+  sign.appendChild(dest_icon3);
+  sign.appendChild(text_q3);
+  sign.appendChild(text_m3);
+  
+  return sign;
+}    
+  
+function createSignDestination(angle){
+  var sign = createSignEntity(angle);
+  
+  var label = createImageEntity("#label", new THREE.Vector3(2.128, 1.512, 0.01), new THREE.Vector3(0, 0, 0), "2");
+  var dest_icon = createImageEntity("#door_icon", new THREE.Vector3(0.225, 0.225, 0.01), new THREE.Vector3(-0.4, -0.06, 0), "3");
+  var text_d = createTextEntity("MŮJ CÍL", "#0055B4", 6, new THREE.Vector3(0, 0.35, 0));  
+  var text_m = createTextEntity("150 m", "#0055B4", 4, new THREE.Vector3(0.5, -0.4, 0));
+  var text_q = createTextEntity("Q4234", "#343A3E", 5, new THREE.Vector3(0.2, -0.05, 0));
+  var text_t = createTextEntity("3 min", "#0055B4", 4, new THREE.Vector3(-0.5, -0.4, 0));
+  
+  sign.appendChild(label);
+  sign.appendChild(dest_icon);						  
+  sign.appendChild(text_d); 
+  sign.appendChild(text_q);
+  sign.appendChild(text_m);
+  sign.appendChild(text_t);
+  
+  return sign;
+}  
+
+function createImageEntity(imageSrc, scale, position, renderOrder){
+  imageId = imageSrc + arrowId + 1;
+  var imageEntity = document.createElement('a-image');  
+						  
+  imageEntity.setAttribute('id', imageId);
+  imageEntity.setAttribute('src', imageSrc);
+  imageEntity.setAttribute('scale', scale);
+  imageEntity.setAttribute('position', position);
+  imageEntity.setAttribute('material', "depthTest: false; transparent: true");	
+  imageEntity.setAttribute('render-order', renderOrder)							 
+
+  
+  return imageEntity;
+}
+
+function createSignEntity(angle){
+  var signEntity = document.createElement('a-entity');
+  signEntity.setAttribute('id', "sign" + arrowId);
+  signEntity.setAttribute('rotation', {x: -90, y: 0, z: angle});
+  signEntity.setAttribute('position', {x: R*Math.cos(toRadians(angle+90)), y: 0, z: R*Math.sin(toRadians(angle-90))});
+  
+  return signEntity;
+}  
+  
+function createArrowEntity(imageSrc, angle){
+  arrowId = imageSrc + arrowId + 1;
+  var arrowEntity = document.createElement('a-image');
+  arrowEntity.setAttribute('id', arrowId);
+  arrowEntity.setAttribute('src', imageSrc);
+  arrowEntity.setAttribute('rotation', {x: -90, y: 0, z: angle});
+  arrowEntity.setAttribute('scale', {x: 1.63, y: 3.28, z: 0.01});
+	arrowEntity.setAttribute('material', "depthTest: false; transparent: true")																			
+	if(imageSrc == "#blue_arrow"){
+		arrowEntity.setAttribute('position', {x: R*Math.cos(toRadians(angle+90)), y: 0, z: R*Math.sin(toRadians(angle-90))});
+		arrowEntity.setAttribute('render-order', "1")													
+	}
+	else{
+		arrowEntity.setAttribute('position', {x: R*Math.cos(toRadians(angle+90)), y: 0, z: R*Math.sin(toRadians(angle-90))});
+		arrowEntity.setAttribute('render-order', "0")																						 
+	}				      
+  
+  
+  return arrowEntity;
+}  
+
+function createTextEntity(textValue, textColor, size, position){
+  var textEntity = document.createElement('a-entity');
+  var textParamas = "value:" + textValue + "; color:" + textColor + ";shader: msdf; font:fonts/Roboto-Bold-msdf.json; negate:false; align:center" 
+  
+  textEntity.setAttribute('material', "depthTest: false; transparent: true")	
+  textEntity.setAttribute('render-order', "3")								
+  textEntity.setAttribute('text', textParamas);
+  textEntity.setAttribute('scale', {x: size, y: size, z: 0.1});
+  textEntity.setAttribute('position', position);
+  
+  return textEntity;
+} 
+																		 					
+</script>
+</body>
+</html>
