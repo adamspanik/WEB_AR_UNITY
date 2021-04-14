@@ -14,7 +14,7 @@
 		<p id="detectedqr">DETECTING QR: </p>
 	</div>	
 
-	<a-scene device-orientation-permission-ui="enabled: false" [renderer]="logarithmicDepthBuffer: true;" embedded arjs=’sourceType: webcam; trackingMethod:best;’ vr-mode-ui='enabled: false'>
+	<a-scene device-orientation-permission-ui="enabled: false" renderer="logarithmicDepthBuffer: true; antialias: true;" embedded arjs=’sourceType: webcam; trackingMethod:best;’ vr-mode-ui='enabled: false'>
 	<canvas visibility="hidden"></canvas>	
 	<a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .intersectable; useWorldCoordinates: true;"></a-entity>
 	<a-assets>
